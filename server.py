@@ -13,7 +13,7 @@ from langchain.chains import RetrievalQA
 import psycopg2 as dbb
 from psycopg2.extras import execute_values
 from pgvector.psycopg2 import register_vector
-import urllib.parse
+from urllib.parse import quote_plus
 
 app = Flask(__name__)
 
@@ -26,11 +26,11 @@ user = os.getenv('USER')
 password = os.getenv('PASSWORD')
 dbname = os.getenv('DB')
 endpoint = os.getenv('ENDPOINT')
-encoded_endpoint = urllib.parse.quote(endpoint)
+encoded_endpoint = quote_plus(endpoint)
 sslmode = 'require'
 # sslmode = 'disable'
 
-CONNECTION_STRING = f"host={host} dbname={dbname} user={user} password={password} sslmode={sslmode} options='-c endpoint%3D{endpoint}'"
+CONNECTION_STRING = f"host={host} dbname={dbname} user={user} password={password} sslmode={sslmode} options=endpoint%3D{encoded_endpoint}"
 # CONNECTION_STRING_NO_DB = f"host={host} dbname={dbname} user={user} password={password} sslmode={sslmode} options='-c search_path=public -c options=endpoint={endpoint}'"
 
 
