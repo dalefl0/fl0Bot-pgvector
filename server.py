@@ -30,7 +30,7 @@ encoded_endpoint = urllib.parse.quote(endpoint)
 sslmode = 'require'
 # sslmode = 'disable'
 
-CONNECTION_STRING = f"host={host} dbname={dbname} user={user} password={password} sslmode={sslmode} options=endpoint%3D{endpoint}"
+CONNECTION_STRING = f"host={host} dbname={dbname} user={user} password={password} sslmode={sslmode} options='-c endpoint%3D{endpoint}'"
 # CONNECTION_STRING_NO_DB = f"host={host} dbname={dbname} user={user} password={password} sslmode={sslmode} options='-c search_path=public -c options=endpoint={endpoint}'"
 
 
