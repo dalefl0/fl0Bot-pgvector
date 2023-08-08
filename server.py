@@ -59,18 +59,17 @@ def setup_pgvector():
 @app.route('/api/csv', methods=['POST'])
 def to_csv():
     
-
     data = [
-        {"Serial No": 1, "Title": "Facebook", "Content": "Social networking platform", "Country Origin": "United States"},
-        {"Serial No": 2, "Title": "Twitter", "Content": "Microblogging platform", "Country Origin": "United States"},
-        {"Serial No": 3, "Title": "Instagram", "Content": "Photo and video sharing platform", "Country Origin": "United States"},
-        {"Serial No": 4, "Title": "LinkedIn", "Content": "Professional networking platform", "Country Origin": "United States"},
-        {"Serial No": 5, "Title": "YouTube", "Content": "Video-sharing platform", "Country Origin": "United States"},
-        {"Serial No": 6, "Title": "TikTok", "Content": "Short-form video platform", "Country Origin": "China"},
-        {"Serial No": 7, "Title": "WhatsApp", "Content": "Messaging platform", "Country Origin": "United States"},
-        {"Serial No": 8, "Title": "Snapchat", "Content": "Multimedia messaging app", "Country Origin": "United States"},
-        {"Serial No": 9, "Title": "WeChat", "Content": "Social media and messaging app", "Country Origin": "China"},
-        {"Serial No": 10, "Title": "Reddit", "Content": "Social news aggregation platform", "Country Origin": "United States"},
+        {"Sno": 1, "title": "Facebook", "content": "Social networking platform", "origin": "United States"},
+        {"Sno": 2, "title": "Twitter", "content": "Microblogging platform", "origin": "United States"},
+        {"Sno": 3, "title": "Instagram", "content": "Photo and video sharing platform", "origin": "United States"},
+        {"Sno": 4, "title": "LinkedIn", "content": "Professional networking platform", "origin": "United States"},
+        {"Sno": 5, "title": "YouTube", "content": "Video-sharing platform", "origin": "United States"},
+        {"Sno": 6, "title": "TikTok", "content": "Short-form video platform", "origin": "China"},
+        {"Sno": 7, "title": "WhatsApp", "content": "Messaging platform", "origin": "United States"},
+        {"Sno": 8, "title": "Snapchat", "content": "Multimedia messaging app", "origin": "United States"},
+        {"Sno": 9, "title": "WeChat", "content": "Social media and messaging app", "origin": "China"},
+        {"Sno": 10, "title": "Reddit", "content": "Social news aggregation platform", "origin": "United States"},
     ]
 
     # Define the CSV file path
@@ -86,7 +85,7 @@ def to_csv():
 
         # Write the data rows
         writer.writerows(data)
-        
+
     return jsonify({'response': 'CSV file created successfully.'})
 
 @app.route('/api/qa', methods=['POST'])
