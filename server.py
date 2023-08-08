@@ -25,7 +25,7 @@ dbname = os.getenv('DB')
 endpoint = os.getenv('ENDPOINT')
 sslmode = 'require'
 
-CONNECTION_STRING = f"host={host} database={dbname} user={user} password={password} sslmode={sslmode}"
+CONNECTION_STRING = f"host={host} dbname={dbname} user={user} password={password} sslmode={sslmode}"
 # CONNECTION_STRING = f"postgresql+psycopg2://{user}:{password}@{host}:{port}/{dbname}?sslmode=require&options=endpoint%3D{endpoint}"
 VECTOR_EXTENSION_SQL = "CREATE EXTENSION IF NOT EXISTS vector;"
 
