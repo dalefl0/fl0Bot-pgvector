@@ -94,6 +94,8 @@ def qa():
     qa_stuff = RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=retriever)
 
     response = qa_stuff.run(query)
+
+    print(response)
     
     return jsonify({'response': response})
 
