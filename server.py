@@ -56,38 +56,6 @@ def setup_pgvector():
         print(f"Error installing pgvector extension: {e}")
         raise
 
-@app.route('/api/csv', methods=['POST'])
-def to_csv():
-    
-    data = [
-        {"Sno": 1, "title": "Facebook", "content": "Social networking platform", "origin": "United States"},
-        {"Sno": 2, "title": "Twitter", "content": "Microblogging platform", "origin": "United States"},
-        {"Sno": 3, "title": "Instagram", "content": "Photo and video sharing platform", "origin": "United States"},
-        {"Sno": 4, "title": "LinkedIn", "content": "Professional networking platform", "origin": "United States"},
-        {"Sno": 5, "title": "YouTube", "content": "Video-sharing platform", "origin": "United States"},
-        {"Sno": 6, "title": "TikTok", "content": "Short-form video platform", "origin": "China"},
-        {"Sno": 7, "title": "WhatsApp", "content": "Messaging platform", "origin": "United States"},
-        {"Sno": 8, "title": "Snapchat", "content": "Multimedia messaging app", "origin": "United States"},
-        {"Sno": 9, "title": "WeChat", "content": "Social media and messaging app", "origin": "China"},
-        {"Sno": 10, "title": "Reddit", "content": "Social news aggregation platform", "origin": "United States"},
-    ]
-
-    # Define the CSV file path
-    csv_file = "social_media.csv"
-
-    # Write data to the CSV file
-    with open(csv_file, mode="w", newline="", encoding="utf-8") as file:
-        fieldnames = ["Sno", "title", "content", "origin"]
-        writer = csv.DictWriter(file, fieldnames=fieldnames)
-
-        # Write the header row
-        writer.writeheader()
-
-        # Write the data rows
-        writer.writerows(data)
-
-    return jsonify({'response': 'CSV file created successfully.'})
-
 @app.route('/api/qa', methods=['POST'])
 def qa():
     df = pd.read_csv('social_media.csv')
