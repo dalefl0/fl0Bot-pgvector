@@ -55,8 +55,8 @@ def setup_pgvector():
         print(f"Error installing pgvector extension: {e}")
         raise
 
-@app.route('/api/preprocess', methods=['POST'])
-def preprocess():
+@app.route('/api/qa', methods=['POST'])
+def qa():
     df = pd.read_csv('social_media.csv')
     new_list = []
     for i in range(len(df.index)):
@@ -84,10 +84,6 @@ def preprocess():
         connection_string=CONNECTION_STRING
     )
 
-    return jsonify({'response': 'Preprocessed successfully.'})
-
-@app.route('/api/qa', methods=['POST'])
-def qa():
     data = request.get_json()
     query = data['query']
 
