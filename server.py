@@ -1,28 +1,29 @@
 from flask import Flask, request, jsonify
+
 from langchain.vectorstores.pgvector import PGVector
-import os
-from dotenv import load_dotenv
-import pandas as pd
-import tiktoken
 from langchain.text_splitter import TokenTextSplitter
 from langchain.document_loaders import DataFrameLoader
 from langchain.embeddings import OpenAIEmbeddings
 from langchain.vectorstores.pgvector import DistanceStrategy
 from langchain.chat_models import ChatOpenAI
 from langchain.chains import RetrievalQA
-import psycopg2 as dbb
-import pg8000
 
-app = Flask(__name__)
+import psycopg2
+import os
+import pandas as pd
+import tiktoken
+from dotenv import load_dotenv
 
 load_dotenv()
 
-host = os.getenv('HOST')
-port = os.getenv('DBPORT')
-user = os.getenv('USER')
-password = os.getenv('PASSWORD')
-dbname = os.getenv('DB')
-endpoint = os.getenv('ENDPOINT')
+app = Flask(__name__)
+
+host = os.getenv('PGHOST')
+port = os.getenv('PGPORT')
+user = os.getenv('PGUSER')
+password = os.getenv('PGPASSWORD')
+dbname = os.getenv('PGDATABASE')
+endpoint = os.getenv('PGENDPOINT')
 sslmode = 'require'
 
 CONNECTION_STRING = f"host={host} dbname={dbname} user={user} password={password} sslmode={sslmode}"
@@ -30,7 +31,7 @@ CONNECTION_STRING = f"host={host} dbname={dbname} user={user} password={password
 VECTOR_EXTENSION_SQL = "CREATE EXTENSION IF NOT EXISTS vector;"
 
 def setup_pgvector():
-    connection = dbb.connect(CONNECTION_STRING)
+    connection = psycopg2.connect(CONNECTION_STRING)
 
     try:
         with connection:
