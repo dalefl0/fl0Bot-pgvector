@@ -82,7 +82,7 @@ embeddings = OpenAIEmbeddings()
 db = PGVector.from_documents(
     documents=docs,
     embedding=embeddings,
-    collection_name="blog_posts",
+    collection_name="social_media",
     distance_strategy=DistanceStrategy.COSINE,
     connection_string=CONNECTION_STRING
 )
