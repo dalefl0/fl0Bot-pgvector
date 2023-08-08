@@ -11,4 +11,5 @@ pandas
 numpy
 psycopg2
 psycopg2cffi
+pg8000
 

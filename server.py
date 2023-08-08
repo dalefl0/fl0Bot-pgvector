@@ -14,6 +14,7 @@ import psycopg2 as dbb
 from psycopg2.extras import execute_values
 from pgvector.psycopg2 import register_vector
 from urllib.parse import quote_plus
+import pg8000
 
 app = Flask(__name__)
 
@@ -30,7 +31,7 @@ encoded_endpoint = quote_plus(endpoint)
 sslmode = 'require'
 # sslmode = 'disable'
 
-CONNECTION_STRING = f"host={host} dbname={dbname} user={user} password={password} sslmode={sslmode} options=endpoint%3D{encoded_endpoint}"
+CONNECTION_STRING = f"host={host} database={dbname} user={user} password={password} sslmode={sslmode}"
 # CONNECTION_STRING_NO_DB = f"host={host} dbname={dbname} user={user} password={password} sslmode={sslmode} options='-c search_path=public -c options=endpoint={endpoint}'"
 
 
