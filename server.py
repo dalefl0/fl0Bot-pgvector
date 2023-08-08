@@ -27,7 +27,7 @@ endpoint = os.getenv('PGENDPOINT')
 sslmode = 'require'
 
 # CONNECTION_STRING = f"host={host} dbname={dbname} user={user} password={password} sslmode={sslmode}"
-CONNECTION_STRING = f"postgresql://{user}:{password}@{host}:{port}/{dbname}?sslmode=require&options=endpoint%3D{endpoint}"
+CONNECTION_STRING = f"postgresql://{user}:{password}@{host}:{port}/{dbname}?sslmode%3Drequire&options%3Dendpoint%3D{endpoint}"
 VECTOR_EXTENSION_SQL = "CREATE EXTENSION IF NOT EXISTS vector;"
 
 def setup_pgvector():
