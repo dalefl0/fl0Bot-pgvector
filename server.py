@@ -37,7 +37,7 @@ def num_tokens_from_string(string: str, encoding_name="cl100k_base") -> int:
 
 text_splitter = TokenTextSplitter(chunk_size=512, chunk_overlap=103)
 
-@app.route('/setup', methods=['POST'])
+@app.route('/api/setup', methods=['POST'])
 def setup_pgvector():
     connection = psycopg2.connect(CONNECTION_STRING)
 
@@ -49,13 +49,13 @@ def setup_pgvector():
         connection.commit()
         
         register_vector(connection)
-        print("pgvector extension installed successfully.")
+        return jsonify({'response': 'pgvector extension installed successfully.'})
 
     except Exception as e:
         print(f"Error installing pgvector extension: {e}")
         raise
 
-@app.route('/preprocess', methods=['POST'])
+@app.route('/api/preprocess', methods=['POST'])
 def preprocess():
     df = pd.read_csv('social_media.csv')
     new_list = []
@@ -83,6 +83,8 @@ def preprocess():
         distance_strategy=DistanceStrategy.COSINE,
         connection_string=CONNECTION_STRING
     )
+
+    return jsonify({'response': 'Preprocessed successfully.'})
 
 @app.route('/api/qa', methods=['POST'])
 def qa():
