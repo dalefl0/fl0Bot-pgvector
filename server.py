@@ -27,7 +27,7 @@ endpoint = os.getenv('PGENDPOINT')
 sslmode = 'require'
 
 # CONNECTION_STRING = f"host={host} dbname={dbname} user={user} password={password} sslmode={sslmode}"
-CONNECTION_STRING = f"postgresql://{user}:{password}@{host}:{port}/{dbname}?sslmode=require&options=endpoint={endpoint}"
+CONNECTION_STRING = f"postgresql://{user}:{password}@{host}:{port}/{dbname}?sslmode=require&options=endpoint%3D{endpoint}"
 
 def setup_pgvector():
     connection = psycopg2.connect(CONNECTION_STRING)
