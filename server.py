@@ -59,6 +59,7 @@ def setup_pgvector():
 @app.route('/api/qa', methods=['POST'])
 def qa():
     df = pd.read_csv('social_media.csv')
+    print("CSV Read")
     new_list = []
     for i in range(len(df.index)):
         text = df['content'][i]
@@ -71,9 +72,11 @@ def qa():
                 new_list.append([df['title'][i], split_text[j], df['origin'][i]])
 
     df_new = pd.DataFrame(new_list, columns=['title', 'content', 'origin'])
+    print("PANDAS DATAFRAME")
 
     loader = DataFrameLoader(df_new, page_content_column='content')
     docs = loader.load()
+    print("DATAFRAME LOADER")
 
     embeddings = OpenAIEmbeddings()
 
@@ -84,18 +87,21 @@ def qa():
         distance_strategy=DistanceStrategy.COSINE,
         connection_string=CONNECTION_STRING
     )
+    print("EMBEDDING 1")
 
     data = request.get_json()
     query = data['query']
+    print("QUERY", query)
 
     retriever = db.as_retriever(search_kwargs={"k": 3})
     
     llm = ChatOpenAI(temperature=0.0, model='gpt-3.5-turbo-16k', openai_api_key=os.getenv('OPENAI_API_KEY'))
+    print("OPENAI LLM")
     qa_stuff = RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=retriever)
+    print("QA STUFF")
 
     response = qa_stuff.run(query)
-
-    print(response)
+    print("RESPONSE", response)
     
     return jsonify({'response': response})
 
