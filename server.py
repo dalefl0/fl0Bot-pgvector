@@ -9,6 +9,7 @@ from langchain.chat_models import ChatOpenAI
 from langchain.chains import RetrievalQA
 
 import psycopg2
+from pgvector.psycopg2 import register_vector
 import os
 import pandas as pd
 import tiktoken
@@ -24,9 +25,7 @@ user = os.getenv('PGUSER')
 password = os.getenv('PGPASSWORD')
 dbname = os.getenv('PGDATABASE')
 endpoint = os.getenv('PGENDPOINT')
-sslmode = 'require'
 
-# CONNECTION_STRING = f"host={host} dbname={dbname} user={user} password={password} sslmode={sslmode}"
 CONNECTION_STRING = f"postgresql://{user}:{password}@{host}:{port}/{dbname}?sslmode=require&options=endpoint%3D{endpoint}"
 
 def setup_pgvector():
@@ -39,7 +38,6 @@ def setup_pgvector():
 
         connection.commit()
         
-        from pgvector.psycopg2 import register_vector
         register_vector(connection)
         print("pgvector extension installed successfully.")
 
