@@ -15,6 +15,7 @@ import re
 import pandas as pd
 import tiktoken
 from dotenv import load_dotenv
+from typing import Optional, Dict
 import requests
 
 load_dotenv()
@@ -58,7 +59,7 @@ def setup_pgvector():
         raise
 
 @app.route('/api/qa', methods=['POST'])
-def qa(query):
+def qa(query: Optional[Dict] = None):
     df = pd.read_csv('training_data.csv')
     new_list = []
     for i in range(len(df.index)):
@@ -86,8 +87,9 @@ def qa(query):
         connection_string=CONNECTION_STRING
     )
 
-    # data = request.get_json()
-    # query = data['query']
+    if(query is None): 
+        data = request.get_json()
+        query = data['query']
 
     retriever = db.as_retriever(search_kwargs={"k": 3})
     
@@ -104,7 +106,7 @@ def handleAppMention(event):
     msg = re.sub(mentionRegex, '', event['text'])
     query = msg
 
-    response = qa()
+    response = qa(query)
 
     try:
     
