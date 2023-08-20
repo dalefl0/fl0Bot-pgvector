@@ -9,7 +9,6 @@ from langchain.chat_models import ChatOpenAI
 from langchain.chains import RetrievalQA
 
 import psycopg2
-import csv
 from pgvector.psycopg2 import register_vector
 import os
 import pandas as pd
