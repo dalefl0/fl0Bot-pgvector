@@ -37,7 +37,7 @@ def num_tokens_from_string(string: str, encoding_name="cl100k_base") -> int:
 
 text_splitter = TokenTextSplitter(chunk_size=512, chunk_overlap=103)
 
-@app.route('/api/setup', methods=['POST'])
+@app.route('/api/setup', methods=['PATCH'])
 def setup_pgvector():
     connection = psycopg2.connect(CONNECTION_STRING)
 
