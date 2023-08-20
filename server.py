@@ -11,9 +11,11 @@ from langchain.chains import RetrievalQA
 import psycopg2
 from pgvector.psycopg2 import register_vector
 import os
+import re
 import pandas as pd
 import tiktoken
 from dotenv import load_dotenv
+import requests
 
 load_dotenv()
 
@@ -56,7 +58,7 @@ def setup_pgvector():
         raise
 
 @app.route('/api/qa', methods=['POST'])
-def qa():
+def qa(query):
     df = pd.read_csv('training_data.csv')
     new_list = []
     for i in range(len(df.index)):
@@ -84,8 +86,8 @@ def qa():
         connection_string=CONNECTION_STRING
     )
 
-    data = request.get_json()
-    query = data['query']
+    # data = request.get_json()
+    # query = data['query']
 
     retriever = db.as_retriever(search_kwargs={"k": 3})
     
@@ -95,6 +97,45 @@ def qa():
     response = qa_stuff.run(query)
     
     return jsonify({'response': response})
+
+
+def handleAppMention(event):
+    mentionRegex = re.compile(r'<@[\w\d]+>') 
+    msg = re.sub(mentionRegex, '', event['text'])
+    query = msg
+
+    response = qa()
+
+    try:
+    
+        # Send a message to Slack
+        webhook_url = os.getenv('SLACK_WEBHOOK')
+        requests.post(webhook_url, json={'text': response})
+
+        return response['choices'][0]['message']['content']
+    except Exception as e:
+        print(f"ERROR: {e}")
+        return "Failed to process chat"
+    
+
+@app.route('/slack/action-endpoint', methods=['POST'])
+def slack_action_endpoint():
+    data = request.json
+    challenge = data.get('challenge')
+    
+    if challenge:
+        return jsonify(challenge), 200
+    else:
+        try:
+            event_type = data['event']['type']
+            if event_type == "app_mention":
+                response = handleAppMention(data)
+                return jsonify({"message": "Success"}), 200
+            else:
+                return jsonify({"message": "Bad Request"}), 400
+        except Exception as e:
+            print(f"Error processing Slack event: {e}")
+            return jsonify({"message": str(e)}), 500
 
 if __name__ == "__main__":
     app.run()
