@@ -17,6 +17,7 @@ import tiktoken
 from dotenv import load_dotenv
 from typing import Optional, Dict
 import requests
+import threading
 
 load_dotenv()
 
@@ -128,7 +129,9 @@ def slack_action_endpoint():
         try:
             event_type = data.get('event', {}).get('type', None)
             if event_type == "app_mention":
-                handleAppMention( data.get('event', {}).get('text', None))
+                thread = threading.Thread(target=handleAppMention, args=(data.get('event', {}).get('text', None),))
+                thread.start()
+                # handleAppMention( data.get('event', {}).get('text', None))
                 return jsonify({"message": "Success"}), 200
             else:
                 return jsonify({"message": "Bad Request"}), 400
