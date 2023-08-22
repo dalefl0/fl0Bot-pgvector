@@ -1,23 +1,22 @@
-from flask import Flask, request, jsonify
-
-from langchain.vectorstores.pgvector import PGVector
-from langchain.text_splitter import TokenTextSplitter
-from langchain.document_loaders import DataFrameLoader
-from langchain.embeddings import OpenAIEmbeddings
-from langchain.vectorstores.pgvector import DistanceStrategy
-from langchain.chat_models import ChatOpenAI
-from langchain.chains import RetrievalQA
-
-import psycopg2
-from pgvector.psycopg2 import register_vector
 import os
 import re
+import threading
+from typing import Optional, Dict
+
+from flask import Flask, request, jsonify
+import psycopg2
 import pandas as pd
 import tiktoken
 from dotenv import load_dotenv
-from typing import Optional, Dict
 import requests
-import threading
+
+from langchain.vectorstores.pgvector import PGVector, DistanceStrategy
+from langchain.text_splitter import TokenTextSplitter
+from langchain.document_loaders import DataFrameLoader
+from langchain.embeddings import OpenAIEmbeddings
+from langchain.chat_models import ChatOpenAI
+from langchain.chains import RetrievalQA
+from pgvector.psycopg2 import register_vector
 
 load_dotenv()
 
