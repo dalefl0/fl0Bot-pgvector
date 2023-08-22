@@ -139,7 +139,7 @@ def slack_action_endpoint():
             # event_type = data['event']['type']
             event_type = data.get('event', {}).get('type', None)
             if event_type == "app_mention":
-                response = handleAppMention(data.get('text'))
+                response = handleAppMention( data.get('event', {}).get('text', None))
                 return jsonify({"message": "Success"}), 200
             else:
                 return jsonify({"message": "Bad Request"}), 400
