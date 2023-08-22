@@ -102,15 +102,11 @@ def qa(query: Optional[Dict] = None):
 
 
 def handleAppMention(msg):
-    print('Msg 1',msg)
     mentionRegex = re.compile(r'<@[\w\d]+>') 
     msg = re.sub(mentionRegex, '', msg)
-    print('Msg 2',msg)
     query = msg
 
     response = qa(query)
-
-    print(response)
 
     try:
     
@@ -125,15 +121,11 @@ def handleAppMention(msg):
 def slack_action_endpoint():
     data = request.json
     challenge = data.get('challenge')
-
-    print(data)
     
     if challenge:
-        print(data)
         return jsonify(challenge), 200
     else:
         try:
-            # event_type = data['event']['type']
             event_type = data.get('event', {}).get('type', None)
             if event_type == "app_mention":
                 handleAppMention( data.get('event', {}).get('text', None))
