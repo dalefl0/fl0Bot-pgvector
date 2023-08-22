@@ -108,6 +108,8 @@ def handleAppMention(event):
 
     response = qa(query)
 
+    print(response)
+
     try:
     
         # Send a message to Slack
@@ -124,6 +126,8 @@ def handleAppMention(event):
 def slack_action_endpoint():
     data = request.json
     challenge = data.get('challenge')
+
+    print(data)
     
     if challenge:
         return jsonify(challenge), 200
