@@ -130,10 +130,12 @@ def slack_action_endpoint():
     print(data)
     
     if challenge:
+        print(data)
         return jsonify(challenge), 200
     else:
         try:
-            event_type = data['event']['type']
+            # event_type = data['event']['type']
+            event_type = data.get('event', {}).get('type', None)
             if event_type == "app_mention":
                 response = handleAppMention(data)
                 return jsonify({"message": "Success"}), 200
