@@ -98,7 +98,7 @@ def qa(query: Optional[Dict] = None):
 
     response = qa_stuff.run(query)
     
-    return jsonify({'response': response})
+    return response
 
 
 def handleAppMention(msg):
@@ -117,11 +117,8 @@ def handleAppMention(msg):
         # Send a message to Slack
         webhook_url = os.getenv('SLACK_WEBHOOK')
         requests.post(webhook_url, json={'text': response})
-
-        return response['choices'][0]['message']['content']
     except Exception as e:
         print(f"ERROR: {e}")
-        return "Failed to process chat"
     
 
 @app.route('/slack/action-endpoint', methods=['POST'])
@@ -139,7 +136,7 @@ def slack_action_endpoint():
             # event_type = data['event']['type']
             event_type = data.get('event', {}).get('type', None)
             if event_type == "app_mention":
-                response = handleAppMention( data.get('event', {}).get('text', None))
+                handleAppMention( data.get('event', {}).get('text', None))
                 return jsonify({"message": "Success"}), 200
             else:
                 return jsonify({"message": "Bad Request"}), 400
