@@ -29,6 +29,8 @@ password = os.getenv('PGPASSWORD')
 dbname = os.getenv('PGDATABASE')
 endpoint = os.getenv('PGENDPOINT')
 
+db = None  # Global variable to store the embeddings database
+
 CONNECTION_STRING = f"postgresql://{user}:{password}@{host}:{port}/{dbname}?sslmode=require&options=endpoint%3D{endpoint}"
 
 def num_tokens_from_string(string: str, encoding_name="cl100k_base") -> int:
@@ -58,8 +60,9 @@ def setup_pgvector():
         print(f"Error installing pgvector extension: {e}")
         raise
 
-@app.route('/api/qa', methods=['POST'])
-def qa(query: Optional[Dict] = None):
+@app.route('/api/createembeddings', methods=['PATCH'])
+def create_embeddings():
+    global db
     df = pd.read_csv('training_data.csv')
     new_list = []
     for i in range(len(df.index)):
@@ -87,36 +90,25 @@ def qa(query: Optional[Dict] = None):
         connection_string=CONNECTION_STRING
     )
 
-    if(query is None): 
+    return jsonify({'response': 'embeddings succesfully created.'})
+
+@app.route('/api/qa', methods=['POST'])
+def qa(query: Optional[Dict] = None):
+    global db
+
+    if(query is None):
         data = request.get_json()
         query = data['query']
 
     retriever = db.as_retriever(search_kwargs={"k": 3})
-    
+
     llm = ChatOpenAI(temperature=0.0, model='gpt-3.5-turbo-16k', openai_api_key=os.getenv('OPENAI_API_KEY'))
     qa_stuff = RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=retriever)
 
     response = qa_stuff.run(query)
-    
+
     return response
-
-
-def handleAppMention(msg):
-    mentionRegex = re.compile(r'<@[\w\d]+>') 
-    msg = re.sub(mentionRegex, '', msg)
-    query = msg
-
-    response = qa(query)
-
-    try:
     
-        # Send a message to Slack
-        webhook_url = os.getenv('SLACK_WEBHOOK')
-        requests.post(webhook_url, json={'text': response})
-    except Exception as e:
-        print(f"ERROR: {e}")
-    
-
 @app.route('/slack/action-endpoint', methods=['POST'])
 def slack_action_endpoint():
     data = request.json
